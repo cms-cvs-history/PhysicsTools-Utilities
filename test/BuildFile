@@ -1,0 +1,5 @@
+<use name=PhysicsTools/Candidate>
+
+<bin name="testPhysicsToolsUtilities" file="testown_vector.cc,testRunner.cpp ">
+ <use name=cppunit>
+</bin>
