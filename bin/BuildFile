@@ -1,3 +1,0 @@
-<bin name="branchList" file="branchList.cpp">
-  <use name=PhysicsTools/FWLite>
-</bin>
