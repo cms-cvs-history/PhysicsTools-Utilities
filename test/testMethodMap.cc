@@ -41,5 +41,5 @@ void testMethodMap::checkAll() {
   CPPUNIT_ASSERT( * static_cast<double *>( i->second.first.Invoke( Object( type, & trk ) ).Address() ) == pt );
   i = map.find( "charge" );
   CPPUNIT_ASSERT( i != map.end() );
-  CPPUNIT_ASSERT( * static_cast<int *>( i->second.first.Invoke( Object( type, & trk ) ).Address() ) == 1 );
+  CPPUNIT_ASSERT( * static_cast<int *>( i->second.first.Invoke( Object( type, & trk ) ).Address() ) == - 1 );
 }
