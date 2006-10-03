@@ -37,7 +37,6 @@ namespace test {
       return a1.x() + a2.x();
     }
   };
-
 }
 
 void testSelectors::checkAll() {
