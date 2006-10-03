@@ -1,0 +1,4 @@
+<bin name="testPhysicsToolsUtilities" file="testSelectors.cc,testRunner.cpp">
+  <use name=PhysicsTools/Utilities>
+  <use name=cppunit>
+</bin>
