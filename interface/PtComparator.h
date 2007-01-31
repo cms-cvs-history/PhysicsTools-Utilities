@@ -2,13 +2,14 @@
 #define RecoAlgos_PtComparator_h
 /** \class PtComparator
  *
- * compare by pt
+ * selects a subset of a track collection. Also clones
+ * TrackExtra part and RecHits collection
  * 
  * \author Luca Lista, INFN
  *
  * \version $Revision: 1.1 $
  *
- * $Id: PtComparator.h,v 1.1 2006/07/25 09:02:56 llista Exp $
+ * $Id: PtComparator.h,v 1.1 2006/07/21 12:38:50 llista Exp $
  *
  */
 

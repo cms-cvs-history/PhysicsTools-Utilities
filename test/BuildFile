@@ -1,4 +1,5 @@
-<bin name="testPhysicsToolsUtilities" file="testSelectors.cc,testRunner.cpp">
+<bin name="testPhysicsToolsUtilities" file="testMethodMap.cc,testRunner.cpp">
   <use name=PhysicsTools/Utilities>
+  <use name=DataFormats/TrackReco>
   <use name=cppunit>
 </bin>
