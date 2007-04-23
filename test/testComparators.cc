@@ -51,4 +51,7 @@ void testComparators::checkAll() {
   CPPUNIT_ASSERT( cmp6( b, a ) ); 
   CPPUNIT_ASSERT( cmp7( b, a ) ); 
   CPPUNIT_ASSERT( cmp8( b, a ) ); 
+  PointerComparator<LessByPt<A> > cmp9;
+  CPPUNIT_ASSERT( cmp9( &a, &b ) );
+
 }
