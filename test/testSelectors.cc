@@ -1,6 +1,6 @@
 #include <cppunit/extensions/HelperMacros.h>
-#include "PhysicsTools/Utilities/interface/MinSelector.h"
-#include "PhysicsTools/Utilities/interface/MaxSelector.h"
+#include "PhysicsTools/Utilities/interface/MinFunctionSelector.h"
+#include "PhysicsTools/Utilities/interface/MaxFunctionSelector.h"
 #include "PhysicsTools/Utilities/interface/RangeSelector.h"
 #include "PhysicsTools/Utilities/interface/MinObjectPairSelector.h"
 #include "PhysicsTools/Utilities/interface/MaxObjectPairSelector.h"
@@ -43,8 +43,8 @@ void testSelectors::checkAll() {
   using namespace test;
   {
     A a( 1.0 );
-    MinSelector<A, & A::x> minSel( 0.9 );
-    MaxSelector<A, & A::x> maxSel( 1.1 );
+    MinFunctionSelector<A, & A::x> minSel( 0.9 );
+    MaxFunctionSelector<A, & A::x> maxSel( 1.1 );
     RangeSelector<A, & A::x> rangeSel( 0.9, 1.1 );
     PtMinSelector<A> ptMinSel( 0.9 );
     EtMinSelector<A> etMinSel( 0.9 );
