@@ -46,8 +46,8 @@ void testSelectors::checkAll() {
     MinFunctionSelector<A, & A::x> minSel( 0.9 );
     MaxFunctionSelector<A, & A::x> maxSel( 1.1 );
     RangeSelector<A, & A::x> rangeSel( 0.9, 1.1 );
-    PtMinSelector<A> ptMinSel( 0.9 );
-    EtMinSelector<A> etMinSel( 0.9 );
+    PtMinSelector ptMinSel( 0.9 );
+    EtMinSelector etMinSel( 0.9 );
     
     CPPUNIT_ASSERT( minSel( a ) );
     CPPUNIT_ASSERT( maxSel( a ) );
@@ -57,9 +57,9 @@ void testSelectors::checkAll() {
   }
   {
     A a1( 3.0 ), a2( 5.0 );
-    MinObjectPairSelector<A, Add> minSel( 7.9 );
-    MaxObjectPairSelector<A, Add> maxSel( 8.1 );
-    RangeObjectPairSelector<A, Add> rangeSel( 7.9, 8.1 );
+    MinObjectPairSelector<Add> minSel( 7.9 );
+    MaxObjectPairSelector<Add> maxSel( 8.1 );
+    RangeObjectPairSelector<Add> rangeSel( 7.9, 8.1 );
     CPPUNIT_ASSERT( minSel( a1, a2 ) );
     CPPUNIT_ASSERT( maxSel( a1, a2 ) );
     CPPUNIT_ASSERT( rangeSel( a1, a2 ) );
