@@ -4,10 +4,11 @@
  *
  * \author Luca Lista, INFN
  *
- * $Id: StatusSelector.h,v 1.1 2007/02/23 15:12:41 llista Exp $
+ * $Id: StatusSelector.h,v 1.2 2007/05/04 14:43:35 llista Exp $
  */
 #include <vector>
 #include <algorithm>
+#include "DataFormats/HepMCCandidate/interface/GenParticleCandidate.h"
 
 template<typename T>
 struct StatusSelector {
@@ -23,7 +24,7 @@ struct StatusSelector {
   StatusSelector & operator==( const StatusSelector & o ) {
     * this = o; return * this;
   }  bool operator()( const value_type & t ) const { 
-    return std::find( begin_, end_, t.status() ) != end_;
+    return std::find( begin_, end_, reco::status( t ) ) != end_;
   }
 private:
   std::vector<int> status_;
