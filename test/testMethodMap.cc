@@ -1,5 +1,5 @@
 #include <cppunit/extensions/HelperMacros.h>
-#include "PhysicsTools/Utilities/interface/MethodMap.h"
+#include "PhysicsTools/Utilities/src/MethodMap.h"
 #include "DataFormats/TrackReco/interface/Track.h"
 //#include <iostream>
 
