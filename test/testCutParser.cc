@@ -2,7 +2,7 @@
 #include "PhysicsTools/Utilities/interface/cutParser.h"
 #include "PhysicsTools/Utilities/interface/StringCutObjectSelector.h"
 #include "DataFormats/TrackReco/interface/Track.h"
-//#include <iostream>
+#include <iostream>
 #include <Reflex/Object.h>
 #include <Reflex/Type.h>
 #include <typeinfo>
@@ -25,7 +25,7 @@ public:
 CPPUNIT_TEST_SUITE_REGISTRATION(testCutParser);
 
 void testCutParser::check(const std::string & cut, bool res) {
-  //  std::cerr << "parsing cut: \"" << cut << "\"" << std::endl;
+  std::cerr << "parsing cut: \"" << cut << "\"" << std::endl;
   sel.reset();
   CPPUNIT_ASSERT(reco::parser::cutParser<reco::Track>(cut, sel));
   CPPUNIT_ASSERT((*sel)(o) == res);

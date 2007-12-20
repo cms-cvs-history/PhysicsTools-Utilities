@@ -2,7 +2,7 @@
 #include "PhysicsTools/Utilities/interface/expressionParser.h"
 #include "PhysicsTools/Utilities/interface/StringObjectFunction.h"
 #include "DataFormats/TrackReco/interface/Track.h"
-//#include <iostream>
+#include <iostream>
 #include <Reflex/Object.h>
 #include <Reflex/Type.h>
 #include <typeinfo>
@@ -25,12 +25,12 @@ public:
 CPPUNIT_TEST_SUITE_REGISTRATION(testExpressionParser);
 
 void testExpressionParser::check(const std::string & expression) {
-  //  std::cerr << "parsing expression: \"" << expression << "\"" << std::endl;
+  std::cerr << "parsing expression: \"" << expression << "\"" << std::endl;
   expr.reset();
   CPPUNIT_ASSERT(reco::parser::expressionParser<reco::Track>(expression, expr));
   CPPUNIT_ASSERT(expr.get() != 0);
   double res = expr->value(o);
-  //  std::cerr << expression << " = " << res << std::endl;
+  std::cerr << expression << " = " << res << std::endl;
   StringObjectFunction<reco::Track> f( expression );
   CPPUNIT_ASSERT(fabs(f(trk) - res) < 1.e-6);
 }
