@@ -16,7 +16,7 @@ public:
   void setUp() {}
   void tearDown() {}
   void checkAll(); 
-  void check(const std::string &);
+  void checkTrack(const std::string &);
   reco::Track trk;
   ROOT::Reflex::Object o;
   reco::parser::ExpressionPtr expr;
@@ -24,7 +24,7 @@ public:
 
 CPPUNIT_TEST_SUITE_REGISTRATION(testExpressionParser);
 
-void testExpressionParser::check(const std::string & expression) {
+void testExpressionParser::checkTrack(const std::string & expression) {
   std::cerr << "parsing expression: \"" << expression << "\"" << std::endl;
   expr.reset();
   CPPUNIT_ASSERT(reco::parser::expressionParser<reco::Track>(expression, expr));
@@ -49,11 +49,13 @@ void testExpressionParser::checkAll() {
                  1.5, 2.5, 3.5, 4.5, 5.5 };
   reco::TrackBase::CovarianceMatrix cov(e, e + 15);
   trk = reco::Track(chi2, ndof, v, p, -1, cov);
-
   ROOT::Reflex::Type t = ROOT::Reflex::Type::ByTypeInfo(typeid(reco::Track));
   o = ROOT::Reflex::Object(t, & trk);
 
-  check( "pt" );
-  check( "charge" );
-  check( "pt/3" );
+  checkTrack( "pt" );
+  checkTrack( "charge" );
+  checkTrack( "pt/3" );
+  checkTrack( "momentum.x" );
+  checkTrack( "hitPattern.numberOfValidHits" );
+
 }
