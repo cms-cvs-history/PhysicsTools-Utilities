@@ -108,5 +108,7 @@ void testExpressionParser::checkAll() {
     checkCandidate( "numberOfDaughters", cand.numberOfDaughters() );
     checkCandidate( "daughter(0).pt", cand.daughter(0)->pt() );
     checkCandidate( "daughter(1).pt", cand.daughter(1)->pt() );
+    checkCandidate( "min(daughter(0).pt, daughter(1).pt)", std::min(cand.daughter(0)->pt(), cand.daughter(1)->pt()) );
+    checkCandidate( "max(daughter(0).pt, daughter(1).pt)", std::max(cand.daughter(0)->pt(), cand.daughter(1)->pt()) );
   }
 }
