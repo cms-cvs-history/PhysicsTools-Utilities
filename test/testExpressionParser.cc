@@ -87,6 +87,7 @@ void testExpressionParser::checkAll() {
     o = ROOT::Reflex::Object(t, & trk);
     
     checkTrack( "pt", trk.pt() );
+    checkTrack( "covariance(0, 0)", trk.covariance(0, 0) );
     checkTrack( "charge", trk.charge() );
     checkTrack( "pt/3", trk.pt()/3 );
     checkTrack( "momentum.x", trk.momentum().x() );
