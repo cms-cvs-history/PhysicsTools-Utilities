@@ -67,6 +67,9 @@ void testExpressionParser::checkAll() {
                  1.4, 2.4, 3.4, 4.4,
                  1.5, 2.5, 3.5, 4.5, 5.5 };
   reco::TrackBase::CovarianceMatrix cov(e, e + 15);
+  cov(0, 0) = 1.2345;
+  cov(1, 0) = 123.456;
+  cov(1, 1) = 5.4321;
   trk = reco::Track(chi2, ndof, v, p, -1, cov);
 
   edm::ProductID const pid(1);
@@ -87,9 +90,11 @@ void testExpressionParser::checkAll() {
     o = ROOT::Reflex::Object(t, & trk);
     
     checkTrack( "pt", trk.pt() );
-    checkTrack( "covariance(0, 0)", trk.covariance(0, 0) );
     checkTrack( "charge", trk.charge() );
     checkTrack( "pt/3", trk.pt()/3 );
+    checkTrack( "covariance(0, 0)", trk.covariance(0, 0) );
+    checkTrack( "covariance(1, 0)", trk.covariance(1, 0) );
+    checkTrack( "covariance(1, 1)", trk.covariance(1, 1) );
     checkTrack( "momentum.x", trk.momentum().x() );
     checkTrack( "hitPattern.numberOfValidHits", trk.hitPattern().numberOfValidHits() );
     checkTrack( "extra.outerPhi", trk.extra()->outerPhi() );
