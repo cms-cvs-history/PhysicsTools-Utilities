@@ -7,3 +7,7 @@
   <use name=PhysicsTools/Utilities>
   <use name=cppunit>
 </bin>
+
+<bin file="testZMassFit.cpp" name="testZMassFit">
+  <use name=PhysicsTools/Utilities>
+</bin>
