@@ -10,4 +10,5 @@
 
 <bin file="testZMassFit.cpp" name="testZMassFit">
   <use name=PhysicsTools/Utilities>
+  <use name=root>
 </bin>
