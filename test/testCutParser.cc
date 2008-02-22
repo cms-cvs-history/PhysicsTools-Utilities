@@ -51,6 +51,7 @@ void testCutParser::checkAll() {
   ROOT::Reflex::Type t = ROOT::Reflex::Type::ByTypeInfo(typeid(reco::Track));
   o = ROOT::Reflex::Object(t, & trk);
 
+  std::cerr << "Track pt: " << trk.pt() << std::endl;
   check( "pt > 2", true );
   check( "charge < 0", true );
   check( "pt < 2", false );
@@ -67,8 +68,8 @@ void testCutParser::checkAll() {
   check( "pt > 2 | charge < 0", true );
   check( "pt < 2 | charge < 0", true );
   check( "pt < 2 | charge > 0", false );
-  check( "( pt ) > 2 ", true );
-  check( "- pt < -2 ", true );
+  check( "(pt) > 2", true );
+  check( "-pt < -2 ", true );
   check( "3.9 < pt + 1 < 4.1", true );
   check( "1.9 < pt - 1 < 2.1", true );
   check( "5.9 < 2 * pt < 6.1", true );
