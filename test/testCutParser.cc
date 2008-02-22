@@ -69,7 +69,7 @@ void testCutParser::checkAll() {
   check( "pt < 2 | charge < 0", true );
   check( "pt < 2 | charge > 0", false );
   check( "(pt) > 2", true );
-  check( "-pt < -2 ", true );
+  check( "-pt < -2", true );
   check( "3.9 < pt + 1 < 4.1", true );
   check( "1.9 < pt - 1 < 2.1", true );
   check( "5.9 < 2 * pt < 6.1", true );
@@ -81,10 +81,12 @@ void testCutParser::checkAll() {
   check( " -0.01 < cos( phi ) < 0.01", true );
   check( " 8.9 < pow( pt, 2 ) < 9.1", true );
   check( "( 0.99 < sin( phi ) < 1.01 ) & ( -0.01 < cos( phi ) < 0.01 )", true );
-  check( "( 3.9 < pt + 1 < 4.1 ) | ( pt < 2 ) ", true );
-  check( " pt = 3 &  pt > 2 | pt < 2 ", true );
+  check( "( 3.9 < pt + 1 < 4.1 ) | ( pt < 2 )", true );
+  check( " pt = 3 &  pt > 2 | pt < 2", true );
   check( "( ( pt = 3 &  pt > 2 ) | pt < 2 ) & 26.9 < 3 * pt ^ 2 < 27.1", true );
   check( "! pt > 2", false );
   check( "! pt < 2", true );
   check( "! (( 0.99 < sin( phi ) < 1.01 ) & ( -0.01 < cos( phi ) < 0.01 ))", false );
+  // check trailing space
+  check( "pt > 2 ", true ); 
 }
