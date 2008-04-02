@@ -1,4 +1,4 @@
-<bin name="testPhysicsToolsUtilities" file="testPolynomial.cc,testSelectors.cc,testSelectIterator.cc,testComparators.cc,testCutParser.cc,testExpressionParser.cc,testParameter.cc,testFunctions.cc,testRunner.cpp">
+<bin name="testPhysicsToolsUtilities" file="testPolynomial.cc,testSelectors.cc,testSelectIterator.cc,testComparators.cc,testCutParser.cc,testExpressionParser.cc,testParameter.cc,testFunctions.cc,testVariables.cc,testRunner.cpp">
 <!-- <flags CXXFLAGS="-DBOOST_SPIRIT_DEBUG -DBOOST_SPIRIT_DEBUG_OUT=std::cerr"> -->
   <use name=DataFormats/TrackReco>
   <use name=DataFormats/Candidate>
