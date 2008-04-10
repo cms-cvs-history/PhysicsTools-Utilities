@@ -11,4 +11,6 @@
 <bin file="testZMassFit.cpp" name="testZMassFit">
   <use name=PhysicsTools/Utilities>
   <use name=root>
+  <use name=rootminuit>
+  <use name=rootminuit2>
 </bin>
