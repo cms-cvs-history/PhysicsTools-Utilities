@@ -14,3 +14,10 @@
   <use name=rootminuit>
   <use name=rootminuit2>
 </bin>
+
+<bin file="testExpressionFit.cpp" name="testExpressionFit">
+  <use name=PhysicsTools/Utilities>
+  <use name=root>
+  <use name=rootminuit>
+  <use name=rootminuit2>
+</bin>
