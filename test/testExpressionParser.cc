@@ -98,6 +98,7 @@ void testExpressionParser::checkAll() {
     checkTrack( "momentum.x", trk.momentum().x() );
     checkTrack( "hitPattern.numberOfValidHits", trk.hitPattern().numberOfValidHits() );
     checkTrack( "extra.outerPhi", trk.extra()->outerPhi() );
+    checkTrack( "referencePoint.R", trk.referencePoint().R() );
   }
   reco::Candidate::LorentzVector p1(1, 2, 3, 4);
   reco::Candidate::LorentzVector p2(1.1, 2.2, 3.3, 4.4);
