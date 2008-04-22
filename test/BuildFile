@@ -3,7 +3,6 @@
   <use name=DataFormats/TrackReco>
   <use name=DataFormats/Candidate>
   <use name=rootrflx>
-  <use name=cppunit>
   <use name=PhysicsTools/Utilities>
   <use name=cppunit>
 </bin>

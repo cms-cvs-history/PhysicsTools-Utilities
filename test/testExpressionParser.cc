@@ -89,16 +89,16 @@ void testExpressionParser::checkAll() {
     ROOT::Reflex::Type t = ROOT::Reflex::Type::ByTypeInfo(typeid(reco::Track));
     o = ROOT::Reflex::Object(t, & trk);
     
-    checkTrack( "pt", trk.pt() );
-    checkTrack( "charge", trk.charge() );
-    checkTrack( "pt/3", trk.pt()/3 );
-    checkTrack( "covariance(0, 0)", trk.covariance(0, 0) );
-    checkTrack( "covariance(1, 0)", trk.covariance(1, 0) );
-    checkTrack( "covariance(1, 1)", trk.covariance(1, 1) );
-    checkTrack( "momentum.x", trk.momentum().x() );
-    checkTrack( "hitPattern.numberOfValidHits", trk.hitPattern().numberOfValidHits() );
-    checkTrack( "extra.outerPhi", trk.extra()->outerPhi() );
-    checkTrack( "referencePoint.R", trk.referencePoint().R() );
+    checkTrack("pt", trk.pt());
+    checkTrack("charge", trk.charge());
+    checkTrack("pt/3", trk.pt()/3);
+    checkTrack("covariance(0, 0)", trk.covariance(0, 0));
+    checkTrack("covariance(1, 0)", trk.covariance(1, 0));
+    checkTrack("covariance(1, 1)", trk.covariance(1, 1));
+    checkTrack("momentum.x", trk.momentum().x());
+    checkTrack("hitPattern.numberOfValidHits", trk.hitPattern().numberOfValidHits());
+    checkTrack("extra.outerPhi", trk.extra()->outerPhi());
+    checkTrack("referencePoint.R", trk.referencePoint().R());
   }
   reco::Candidate::LorentzVector p1(1, 2, 3, 4);
   reco::Candidate::LorentzVector p2(1.1, 2.2, 3.3, 4.4);
@@ -112,10 +112,12 @@ void testExpressionParser::checkAll() {
   {
     ROOT::Reflex::Type t = ROOT::Reflex::Type::ByTypeInfo(typeid(reco::Candidate));
     o = ROOT::Reflex::Object(t, & cand);  
-    checkCandidate( "numberOfDaughters", cand.numberOfDaughters() );
-    checkCandidate( "daughter(0).pt", cand.daughter(0)->pt() );
-    checkCandidate( "daughter(1).pt", cand.daughter(1)->pt() );
-    checkCandidate( "min(daughter(0).pt, daughter(1).pt)", std::min(cand.daughter(0)->pt(), cand.daughter(1)->pt()) );
-    checkCandidate( "max(daughter(0).pt, daughter(1).pt)", std::max(cand.daughter(0)->pt(), cand.daughter(1)->pt()) );
+    checkCandidate("numberOfDaughters", cand.numberOfDaughters());
+    checkCandidate("daughter(0).isStandAloneMuon", cand.daughter(0)->isStandAloneMuon());  
+    checkCandidate("daughter(1).isStandAloneMuon", cand.daughter(1)->isStandAloneMuon());  
+    checkCandidate("daughter(0).pt", cand.daughter(0)->pt());
+    checkCandidate("daughter(1).pt", cand.daughter(1)->pt());
+    checkCandidate("min(daughter(0).pt, daughter(1).pt)", std::min(cand.daughter(0)->pt(), cand.daughter(1)->pt()));
+    checkCandidate("max(daughter(0).pt, daughter(1).pt)", std::max(cand.daughter(0)->pt(), cand.daughter(1)->pt()));
   }
 }
