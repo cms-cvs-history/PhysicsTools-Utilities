@@ -60,6 +60,7 @@ void testCutParser::checkAll() {
   check( "pt >= 2", true );
   check( "pt <= 2", false );
   check( "pt = 3", true );
+  check( "pt == 3", true );
   check( "pt != 3", false );
   check( "2.9 < pt < 3.1", true );
   check( "pt > 2 & charge < 0", true );
