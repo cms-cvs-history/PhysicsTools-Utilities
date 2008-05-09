@@ -52,6 +52,8 @@ void testCutParser::checkAll() {
   o = ROOT::Reflex::Object(t, & trk);
 
   std::cerr << "Track pt: " << trk.pt() << std::endl;
+  check( "", true );
+  check( "  ", true );
   check( "pt > 2", true );
   check( "charge < 0", true );
   check( "pt < 2", false );
