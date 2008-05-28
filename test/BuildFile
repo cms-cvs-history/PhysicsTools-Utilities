@@ -2,36 +2,28 @@
 <!-- <flags CXXFLAGS="-DBOOST_SPIRIT_DEBUG -DBOOST_SPIRIT_DEBUG_OUT=std::cerr"> -->
   <use name=DataFormats/TrackReco>
   <use name=DataFormats/Candidate>
-  <use name=rootrflx>
   <use name=PhysicsTools/Utilities>
   <use name=cppunit>
 </bin>
 
 <bin file="testZMassFit.cpp" name="testZMassFit">
   <use name=PhysicsTools/Utilities>
-  <use name=root>
-  <use name=rootminuit>
-  <use name=rootminuit2>
 </bin>
 
 <bin file="testZMassFitSimple.cpp" name="testZMassFitSimple">
   <use name=PhysicsTools/Utilities>
-  <use name=root>
-  <use name=rootminuit>
-  <use name=rootminuit2>
 </bin>
 
 <bin file="testExpressionFit.cpp" name="testExpressionFit">
   <use name=PhysicsTools/Utilities>
-  <use name=root>
-  <use name=rootminuit>
-  <use name=rootminuit2>
 </bin>
 
 <bin file="testRooFitFunction.cpp" name="testRooFitFunction">
   <use name=PhysicsTools/Utilities>
-  <use name=root>
-  <use name=rootminuit>
-  <use name=rootminuit2>
   <lib name=RooFit>
 </bin>
+
+<bin file="testIntegralTiming.cpp" name="testIntegralTiming">
+  <use name=PhysicsTools/Utilities>
+</bin>
+
