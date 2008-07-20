@@ -1,6 +1,6 @@
 #include <cppunit/extensions/HelperMacros.h>
-#include "PhysicsTools/Utilities/interface/DeltaPhi.h"
-#include "PhysicsTools/Utilities/interface/DeltaR.h"
+#include "PhysicsTools/Utilities/interface/deltaPhi.h"
+#include "PhysicsTools/Utilities/interface/deltaR.h"
 #include <iostream>
 
 class testUtilitiess : public CppUnit::TestFixture {
