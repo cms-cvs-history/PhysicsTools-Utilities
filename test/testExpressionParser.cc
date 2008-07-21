@@ -5,6 +5,7 @@
 #include "DataFormats/TrackReco/interface/TrackExtra.h"
 #include "DataFormats/Candidate/interface/CompositeCandidate.h"
 #include "DataFormats/Candidate/interface/LeafCandidate.h"
+#include "DataFormats/PatCandidates/interface/Jet.h"
 #include <iostream>
 #include <Reflex/Object.h>
 #include <Reflex/Type.h>
@@ -22,10 +23,12 @@ public:
   void checkAll(); 
   void checkTrack(const std::string &, double);
   void checkCandidate(const std::string &, double);
+  void checkJet(const std::string &, double);
   reco::Track trk;
   reco::CompositeCandidate cand;
   ROOT::Reflex::Object o;
   reco::parser::ExpressionPtr expr;
+  pat::Jet jet;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(testExpressionParser);
@@ -53,6 +56,19 @@ void testExpressionParser::checkCandidate(const std::string & expression, double
   CPPUNIT_ASSERT(fabs(f(cand) - x) < 1.e-6);
   std::cerr << " = " << res << std::endl;
 }
+
+void testExpressionParser::checkJet(const std::string & expression, double x) {
+  std::cerr << "checking expression: \"" << expression << "\"" << std::flush; 
+  expr.reset();
+  CPPUNIT_ASSERT(reco::parser::expressionParser<pat::Jet>(expression, expr));
+  CPPUNIT_ASSERT(expr.get() != 0);
+  double res = expr->value(o);
+  StringObjectFunction<pat::Jet> f(expression);
+  CPPUNIT_ASSERT(fabs(f(jet) - res) < 1.e-6);
+  CPPUNIT_ASSERT(fabs(f(jet) - x) < 1.e-6);
+  std::cerr << " = " << res << std::endl;
+}
+
 
 void testExpressionParser::checkAll() {
   using namespace reco;
@@ -119,5 +135,40 @@ void testExpressionParser::checkAll() {
     checkCandidate("daughter(1).pt", cand.daughter(1)->pt());
     checkCandidate("min(daughter(0).pt, daughter(1).pt)", std::min(cand.daughter(0)->pt(), cand.daughter(1)->pt()));
     checkCandidate("max(daughter(0).pt, daughter(1).pt)", std::max(cand.daughter(0)->pt(), cand.daughter(1)->pt()));
+  }
+
+
+  std::vector<reco::LeafCandidate> cands;
+  cands.push_back(c1);  cands.push_back(c2); 
+  edm::TestHandle<std::vector<reco::LeafCandidate> > constituentsHandle(&cands, edm::ProductID(42));
+  reco::Jet::Constituents constituents;
+  constituents.push_back( reco::Jet::Constituent(constituentsHandle, 0) );
+  constituents.push_back( reco::Jet::Constituent(constituentsHandle, 1) );
+  jet = pat::Jet(reco::Jet(p1+p2, reco::Jet::Point(), constituents));
+  CPPUNIT_ASSERT(jet.nConstituents() == 2);
+  CPPUNIT_ASSERT(jet.nCarrying(1.0)  == 2);
+  CPPUNIT_ASSERT(jet.nCarrying(0.1)  == 1);
+  {
+    ROOT::Reflex::Type t = ROOT::Reflex::Type::ByTypeInfo(typeid(pat::Jet));
+    o = ROOT::Reflex::Object(t, & jet);
+    checkJet("nCarrying(1.0)", jet.nCarrying(1.0));
+    checkJet("nCarrying(0.1)", jet.nCarrying(0.1));
+  }
+
+  std::pair<std::string,float> bp;
+  bp = std::pair<std::string,float>("aaa", 1.0); jet.addBDiscriminatorPair(bp); 
+  bp = std::pair<std::string,float>("b c", 2.0); jet.addBDiscriminatorPair(bp); 
+  bp = std::pair<std::string,float>("d " , 3.0); jet.addBDiscriminatorPair(bp); 
+  CPPUNIT_ASSERT(jet.bDiscriminator("aaa") == 1.0);
+  CPPUNIT_ASSERT(jet.bDiscriminator("b c") == 2.0);
+  CPPUNIT_ASSERT(jet.bDiscriminator("d ")  == 3.0);
+  CPPUNIT_ASSERT(jet.getPairDiscri().size() == 3 );
+  {
+    ROOT::Reflex::Type t = ROOT::Reflex::Type::ByTypeInfo(typeid(pat::Jet));
+    o = ROOT::Reflex::Object(t, & jet);
+    checkJet("bDiscriminator(\"aaa\")", jet.bDiscriminator("aaa"));
+    checkJet("bDiscriminator('aaa')"  , jet.bDiscriminator("aaa"));
+    checkJet("bDiscriminator(\"b c\")", jet.bDiscriminator("b c"));
+    checkJet("bDiscriminator(\"d \")" , jet.bDiscriminator("d " ));
   }
 }
