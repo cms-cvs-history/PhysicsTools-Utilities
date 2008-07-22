@@ -6,6 +6,7 @@
 #include "DataFormats/Candidate/interface/CompositeCandidate.h"
 #include "DataFormats/Candidate/interface/LeafCandidate.h"
 #include "DataFormats/PatCandidates/interface/Jet.h"
+#include "DataFormats/PatCandidates/interface/Muon.h"
 #include <iostream>
 #include <Reflex/Object.h>
 #include <Reflex/Type.h>
@@ -24,11 +25,13 @@ public:
   void checkTrack(const std::string &, double);
   void checkCandidate(const std::string &, double);
   void checkJet(const std::string &, double);
+  void checkMuon(const std::string &, double);
   reco::Track trk;
   reco::CompositeCandidate cand;
   ROOT::Reflex::Object o;
   reco::parser::ExpressionPtr expr;
   pat::Jet jet;
+  pat::Muon muon;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(testExpressionParser);
@@ -67,6 +70,18 @@ void testExpressionParser::checkJet(const std::string & expression, double x) {
   CPPUNIT_ASSERT(fabs(f(jet) - res) < 1.e-6);
   CPPUNIT_ASSERT(fabs(f(jet) - x) < 1.e-6);
   std::cerr << " = " << res << std::endl;
+}
+
+void testExpressionParser::checkMuon(const std::string & expression, double x) {
+  std::cerr << "checking expression: \"" << expression << "\"" << std::flush; 
+  expr.reset();
+  CPPUNIT_ASSERT(reco::parser::expressionParser<pat::Muon>(expression, expr));
+  CPPUNIT_ASSERT(expr.get() != 0);
+  double res = expr->value(o);
+  StringObjectFunction<pat::Muon> f(expression);
+  std::cerr << " = " << x << " (reference), " << res << " (bare), " << f(muon) << " (full)" << std::endl;
+  CPPUNIT_ASSERT(fabs(f(muon) - res) < 1.e-6);
+  CPPUNIT_ASSERT(fabs(f(muon) - x) < 1.e-6);
 }
 
 
@@ -170,5 +185,20 @@ void testExpressionParser::checkAll() {
     checkJet("bDiscriminator('aaa')"  , jet.bDiscriminator("aaa"));
     checkJet("bDiscriminator(\"b c\")", jet.bDiscriminator("b c"));
     checkJet("bDiscriminator(\"d \")" , jet.bDiscriminator("d " ));
+  }
+
+  muon = pat::Muon(reco::Muon(+1, p1+p2));
+  muon.setUserIso(2.0);
+  muon.setUserIso(42.0, 1);
+  CPPUNIT_ASSERT( muon.userIso()  == 2.0 );
+  CPPUNIT_ASSERT( muon.userIso(0) == 2.0 );
+  CPPUNIT_ASSERT( muon.userIso(1) == 42.0 );
+  {
+    ROOT::Reflex::Type t = ROOT::Reflex::Type::ByTypeInfo(typeid(pat::Muon));
+    o = ROOT::Reflex::Object(t, & muon);
+    checkMuon("userIso"    , muon.userIso() );
+    checkMuon("userIso()"  , muon.userIso() );
+    checkMuon("userIso(0)" , muon.userIso(0));
+    checkMuon("userIso(1)" , muon.userIso(1));
   }
 }
