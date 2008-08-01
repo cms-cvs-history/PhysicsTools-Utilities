@@ -54,6 +54,8 @@ void testCutParser::checkAll() {
   std::cerr << "Track pt: " << trk.pt() << std::endl;
   check( "", true );
   check( "  ", true );
+  check("pt", true);
+  check("px", false);
   check( "pt > 2", true );
   check( "charge < 0", true );
   check( "pt < 2", false );
@@ -93,5 +95,9 @@ void testCutParser::checkAll() {
   check( "! pt < 2", true );
   check( "! (( 0.99 < sin( phi ) < 1.01 ) & ( -0.01 < cos( phi ) < 0.01 ))", false );
   // check trailing space
-  check( "pt > 2 ", true ); 
+  check( "pt > 2 ", true );
+  // check handling of errors 
+  sel.reset();
+  CPPUNIT_ASSERT(!reco::parser::cutParser<reco::Track>("1abc",sel));
+  CPPUNIT_ASSERT_THROW(reco::parser::cutParser<reco::Track>("doesNotExist < 1",sel), edm::Exception);
 }
