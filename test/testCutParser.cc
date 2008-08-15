@@ -94,10 +94,24 @@ void testCutParser::checkAll() {
   check( "! pt > 2", false );
   check( "! pt < 2", true );
   check( "! (( 0.99 < sin( phi ) < 1.01 ) & ( -0.01 < cos( phi ) < 0.01 ))", false );
+  check( "pt && pt > 1",true);
   // check trailing space
   check( "pt > 2 ", true );
   // check handling of errors 
   sel.reset();
   CPPUNIT_ASSERT(!reco::parser::cutParser<reco::Track>("1abc",sel));
+  sel.reset();
   CPPUNIT_ASSERT_THROW(reco::parser::cutParser<reco::Track>("doesNotExist < 1",sel), edm::Exception);
+  sel.reset();
+  CPPUNIT_ASSERT_THROW(reco::parser::cutParser<reco::Track>("(pt < 1",sel), edm::Exception);
+  sel.reset();
+  CPPUNIT_ASSERT_THROW(reco::parser::cutParser<reco::Track>("pt < #",sel), edm::Exception);
+  sel.reset();
+  CPPUNIT_ASSERT_THROW(reco::parser::cutParser<reco::Track>("pt <> 5",sel), edm::Exception);
+  sel.reset();
+  CPPUNIT_ASSERT_THROW(reco::parser::cutParser<reco::Track>("cos pt < .5",sel), edm::Exception);
+  sel.reset();
+  CPPUNIT_ASSERT_THROW(reco::parser::cutParser<reco::Track>("cos( pt < .5",sel), edm::Exception);
+  sel.reset();
+  CPPUNIT_ASSERT_THROW(reco::parser::cutParser<reco::Track>(" 2 * (pt + 1 < .5",sel), edm::Exception);
 }
