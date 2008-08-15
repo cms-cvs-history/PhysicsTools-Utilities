@@ -187,6 +187,20 @@ void testExpressionParser::checkAll() {
     checkJet("bDiscriminator(\"d \")" , jet.bDiscriminator("d " ));
   }
 
+  {
+     ROOT::Reflex::Type t = ROOT::Reflex::Type::ByTypeInfo(typeid(pat::Jet));
+     std::vector<reco::SecondaryVertexTagInfo::IndexedTrackData> trackData;
+     std::vector<reco::SecondaryVertexTagInfo::VertexData> vertexData(1);
+     
+     reco::SoftLeptonTagInfo dummyInfo;
+     reco::SoftLeptonProperties props;
+     props.quality = 10;
+     dummyInfo.insert(edm::RefToBase<reco::Track>(), props);
+     edm::Ptr<reco::BaseTagInfo> ptrDummyInfo(edm::ProductID(1),&dummyInfo,0);
+     jet.addTagInfo("dummy", ptrDummyInfo);
+     o = ROOT::Reflex::Object(t, & jet);
+     checkJet("tagInfoSoftLepton.properties(0).quality",jet.tagInfoSoftLepton()->properties(0).quality);
+  }
   muon = pat::Muon(reco::Muon(+1, p1+p2));
   muon.setUserIso(2.0);
   muon.setUserIso(42.0, 1);
