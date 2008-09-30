@@ -52,6 +52,7 @@ void testCutParser::checkAll() {
   o = ROOT::Reflex::Object(t, & trk);
 
   std::cerr << "Track pt: " << trk.pt() << std::endl;
+  // note: pt = 3, charge = -1
   check( "", true );
   check( "  ", true );
   check("pt", true);
@@ -64,6 +65,7 @@ void testCutParser::checkAll() {
   check( "pt = 3", true );
   check( "pt == 3", true );
   check( "pt != 3", false );
+  check( "! pt == 3", false );
   check( "2.9 < pt < 3.1", true );
   check( "pt > 2 & charge < 0", true );
   check( "pt > 2 && charge < 0", true );
@@ -75,6 +77,10 @@ void testCutParser::checkAll() {
   check( "pt > 2 | charge < 0", true );
   check( "pt < 2 | charge < 0", true );
   check( "pt < 2 | charge > 0", false );
+  check( "pt > 2 | charge > 0 | pt < 2", true );
+  check( "pt > 2 | charge > 0 | (pt < 2 && charge < 0)", true );
+  check( "pt > 2 | charge < 0 | (pt < 2 && charge < 0)", true );
+  check( "pt > 2 | charge > 0 | (pt < 2 && charge > 0)", true );
   check( "(pt) > 2", true );
   check( "-pt < -2", true );
   check( "3.9 < pt + 1 < 4.1", true );
