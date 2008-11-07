@@ -2,6 +2,7 @@
 #include "PhysicsTools/Utilities/interface/cutParser.h"
 #include "PhysicsTools/Utilities/interface/StringCutObjectSelector.h"
 #include "DataFormats/TrackReco/interface/Track.h"
+#include "DataFormats/TrackerRecHit2D/interface/SiStripRecHit2D.h"
 #include <iostream>
 #include <Reflex/Object.h>
 #include <Reflex/Type.h>
@@ -17,7 +18,9 @@ public:
   void tearDown() {}
   void checkAll(); 
   void check(const std::string &, bool);
+  void checkHit(const std::string &, bool, const SiStripRecHit2D &);
   reco::Track trk;
+  SiStripRecHit2D hitOk, hitThrow;
   ROOT::Reflex::Object o;
   reco::parser::SelectorPtr sel;
 };
@@ -33,6 +36,18 @@ void testCutParser::check(const std::string & cut, bool res) {
   CPPUNIT_ASSERT(select(trk) == res);
 }
 
+void testCutParser::checkHit(const std::string & cut, bool res, const SiStripRecHit2D &hit) {
+  ROOT::Reflex::Type t = ROOT::Reflex::Type::ByTypeInfo(typeid(SiStripRecHit2D));
+  o = ROOT::Reflex::Object(t, const_cast<void *>(static_cast<const void *>(&hit)));
+  std::cerr << "parsing cut: \"" << cut << "\"" << std::endl;
+  sel.reset();
+  CPPUNIT_ASSERT(reco::parser::cutParser<SiStripRecHit2D>(cut, sel));
+  CPPUNIT_ASSERT((*sel)(o) == res);
+  StringCutObjectSelector<SiStripRecHit2D> select(cut);
+  CPPUNIT_ASSERT(select(hit) == res);
+}
+
+
 void testCutParser::checkAll() {
   using namespace reco;
   using namespace ROOT::Reflex;
@@ -47,6 +62,8 @@ void testCutParser::checkAll() {
                  1.5, 2.5, 3.5, 4.5, 5.5 };
   reco::TrackBase::CovarianceMatrix cov(e, e + 15);
   trk = reco::Track(chi2, ndof, v, p, -1, cov);
+
+  hitOk = SiStripRecHit2D(LocalPoint(1,1), LocalError(1,1,1), 0, SiStripRecHit2D::ClusterRef());
 
   ROOT::Reflex::Type t = ROOT::Reflex::Type::ByTypeInfo(typeid(reco::Track));
   o = ROOT::Reflex::Object(t, & trk);
@@ -120,4 +137,25 @@ void testCutParser::checkAll() {
   CPPUNIT_ASSERT_THROW(reco::parser::cutParser<reco::Track>("cos( pt < .5",sel), edm::Exception);
   sel.reset();
   CPPUNIT_ASSERT_THROW(reco::parser::cutParser<reco::Track>(" 2 * (pt + 1 < .5",sel), edm::Exception);
+
+
+  // check hits
+  CPPUNIT_ASSERT(hitOk.hasPositionAndError());
+  checkHit( "hasPositionAndError" , true, hitOk );
+  CPPUNIT_ASSERT(!hitThrow.hasPositionAndError());
+  checkHit( "hasPositionAndError" , false, hitThrow );
+  CPPUNIT_ASSERT(hitOk.localPosition().x() == 1);
+  checkHit( ".99 < localPosition.x < 1.01", true, hitOk);
+  CPPUNIT_ASSERT_THROW(hitThrow.localPosition().x(), cms::Exception);
+  CPPUNIT_ASSERT_THROW( checkHit(".99 < localPosition.x < 1.01", true, hitThrow) , cms::Exception);
+
+  // check short cirtcuit logics
+  CPPUNIT_ASSERT( hitOk.hasPositionAndError() && (hitOk.localPosition().x() == 1) );
+  CPPUNIT_ASSERT( !( hitThrow.hasPositionAndError() && (hitThrow.localPosition().x() == 1) ) );
+  checkHit( "hasPositionAndError && (localPosition.x = 1)", true,  hitOk    );
+  checkHit( "hasPositionAndError && (localPosition.x = 1)", false, hitThrow );
+  CPPUNIT_ASSERT( (!hitOk.hasPositionAndError()   ) || (hitOk.localPosition().x()    == 1) );
+  CPPUNIT_ASSERT( (!hitThrow.hasPositionAndError()) || (hitThrow.localPosition().x() == 1) );
+  checkHit( "!hasPositionAndError || (localPosition.x = 1)", true,  hitOk    );
+  checkHit( "!hasPositionAndError || (localPosition.x = 1)", true, hitThrow );
 }

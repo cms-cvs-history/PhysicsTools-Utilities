@@ -152,7 +152,6 @@ void testExpressionParser::checkAll() {
     checkCandidate("max(daughter(0).pt, daughter(1).pt)", std::max(cand.daughter(0)->pt(), cand.daughter(1)->pt()));
   }
 
-
   std::vector<reco::LeafCandidate> cands;
   cands.push_back(c1);  cands.push_back(c2); 
   edm::TestHandle<std::vector<reco::LeafCandidate> > constituentsHandle(&cands, edm::ProductID(42));
