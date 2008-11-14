@@ -3,6 +3,7 @@
 #include "PhysicsTools/Utilities/interface/StringCutObjectSelector.h"
 #include "DataFormats/TrackReco/interface/Track.h"
 #include "DataFormats/TrackerRecHit2D/interface/SiStripRecHit2D.h"
+#include "DataFormats/MuonReco/interface/Muon.h"
 #include <iostream>
 #include <Reflex/Object.h>
 #include <Reflex/Type.h>
@@ -19,6 +20,7 @@ public:
   void checkAll(); 
   void check(const std::string &, bool);
   void checkHit(const std::string &, bool, const SiStripRecHit2D &);
+  void checkMuon(const std::string &, bool, const reco::Muon &);
   reco::Track trk;
   SiStripRecHit2D hitOk, hitThrow;
   ROOT::Reflex::Object o;
@@ -46,6 +48,18 @@ void testCutParser::checkHit(const std::string & cut, bool res, const SiStripRec
   StringCutObjectSelector<SiStripRecHit2D> select(cut);
   CPPUNIT_ASSERT(select(hit) == res);
 }
+
+void testCutParser::checkMuon(const std::string & cut, bool res, const reco::Muon &mu) {
+  ROOT::Reflex::Type t = ROOT::Reflex::Type::ByTypeInfo(typeid(reco::Muon));
+  o = ROOT::Reflex::Object(t, const_cast<void *>(static_cast<const void *>(&mu)));
+  std::cerr << "parsing cut: \"" << cut << "\"" << std::endl;
+  sel.reset();
+  CPPUNIT_ASSERT(reco::parser::cutParser<reco::Muon>(cut, sel));
+  CPPUNIT_ASSERT((*sel)(o) == res);
+  StringCutObjectSelector<reco::Muon> select(cut);
+  CPPUNIT_ASSERT(select(mu) == res);
+}
+
 
 
 void testCutParser::checkAll() {
@@ -158,4 +172,14 @@ void testCutParser::checkAll() {
   CPPUNIT_ASSERT( (!hitThrow.hasPositionAndError()) || (hitThrow.localPosition().x() == 1) );
   checkHit( "!hasPositionAndError || (localPosition.x = 1)", true,  hitOk    );
   checkHit( "!hasPositionAndError || (localPosition.x = 1)", true, hitThrow );
+
+  reco::Muon emptyMu;
+  CPPUNIT_ASSERT(  emptyMu.isGood(reco::Muon::All) );
+  CPPUNIT_ASSERT( !emptyMu.isGood(reco::Muon::AllGlobalMuons) );
+  checkMuon("isGood('All')", true , emptyMu);
+  checkMuon("isGood('AllGlobalMuons')", false, emptyMu); 
+  // Check that 'magic values' are not allowed for enums
+  CPPUNIT_ASSERT_THROW( checkMuon( "isGood(0)", true , emptyMu), edm::Exception);
+  // Check that wrong enum names throw exception 
+  CPPUNIT_ASSERT_THROW( checkMuon( "isGood('ThisThingDoesNotExist_Or_At_Least_I_Hope_So')", true , emptyMu), edm::Exception);
 }
