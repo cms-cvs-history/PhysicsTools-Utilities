@@ -16,6 +16,10 @@
   <use name=PhysicsTools/Utilities>
 </bin>
 
+<bin file="testZMassFitLikelihood.cpp" name="testZMassFitLikelihood">
+  <use name=PhysicsTools/Utilities>
+</bin>
+
 <bin file="testExpressionFit.cpp" name="testExpressionFit">
   <use name=PhysicsTools/Utilities>
 </bin>
