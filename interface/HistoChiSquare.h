@@ -1,7 +1,9 @@
 #ifndef PhysicsTools_Utilities_HistoChiSquare_h
 #define PhysicsTools_Utilities_HistoChiSquare_h
+#include "PhysicsTools/Utilities/interface/RootMinuitResultPrinter.h"
 #include <vector>
 #include "TH1.h"
+#include "TMath.h"
 
 namespace fit {
   template<typename T>
@@ -20,15 +22,15 @@ namespace fit {
       }
     }
     double operator()() const { 
-      double chi = 0;
+      double chi2 = 0;
       for(size_t i = 0; i < nBins_; ++i) { 
 	double x = xMin_ + ( i +.5 ) * deltaX_;
 	if((x > rangeMin_)&&(x < rangeMax_)&&(err_[i] > 0)) { 
 	  double r = ( cont_[i] - (*t_)(x) )/err_[i];
-	  chi += (r * r);
+	  chi2 += (r * r);
 	}
       }
-      return chi;
+     return chi2;
     }
     void setHistos(TH1 *histo) { 
       nBins_ = histo->GetNbinsX();
@@ -54,6 +56,16 @@ namespace fit {
     double xMin_, xMax_, deltaX_;
     std::vector<double> cont_;
     std::vector<double> err_;
+  };
+
+  template<typename T>
+  struct RootMinuitResultPrinter<HistoChiSquare<T> > {
+    static void print(double amin, unsigned int numberOfFreeParameters, const HistoChiSquare<T> & f) {
+      unsigned int ndof = f.degreesOfFreedom() - numberOfFreeParameters;
+      std::cout << "chi-squared/n.d.o.f. = " << amin << "/" << ndof << " = " << amin/ndof 
+		<< "; prob: " << TMath::Prob(amin, ndof)
+		<< std::endl;
+    }
   };
 }
 
