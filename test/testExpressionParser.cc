@@ -158,7 +158,8 @@ void testExpressionParser::checkAll() {
   reco::Jet::Constituents constituents;
   constituents.push_back( reco::Jet::Constituent(constituentsHandle, 0) );
   constituents.push_back( reco::Jet::Constituent(constituentsHandle, 1) );
-  jet = pat::Jet(reco::Jet(p1+p2, reco::Jet::Point(), constituents));
+  reco::CaloJet::Specific caloSpecific; caloSpecific.mMaxEInEmTowers = 0.5;
+  jet = pat::Jet(reco::CaloJet(p1+p2, reco::Jet::Point(), caloSpecific, constituents));
   CPPUNIT_ASSERT(jet.nConstituents() == 2);
   CPPUNIT_ASSERT(jet.nCarrying(1.0)  == 2);
   CPPUNIT_ASSERT(jet.nCarrying(0.1)  == 1);
@@ -167,6 +168,11 @@ void testExpressionParser::checkAll() {
     o = ROOT::Reflex::Object(t, & jet);
     checkJet("nCarrying(1.0)", jet.nCarrying(1.0));
     checkJet("nCarrying(0.1)", jet.nCarrying(0.1));
+  }
+  {
+    // Check a method that starts with the same string as a predefined function
+    CPPUNIT_ASSERT(jet.maxEInEmTowers()== 0.5);
+    checkJet("maxEInEmTowers", jet.maxEInEmTowers());
   }
 
   std::pair<std::string,float> bp;
