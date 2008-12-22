@@ -40,6 +40,33 @@ namespace funct {
    e.print(cout); return cout; 
  }
 
+  struct AbsFunctExpression {
+    virtual ~AbsFunctExpression() { }
+    virtual double operator()(double x) const = 0;
+    virtual AbsFunctExpression * clone() const = 0;
+  };
+
+  template<typename F>
+  struct FunctExpressionT : public AbsFunctExpression {
+    inline FunctExpressionT(const F& f) : _f(f) {}
+    virtual ~FunctExpressionT() { }
+    virtual double operator()(double x) const { return _f(x); }
+    virtual AbsFunctExpression * clone() const { return new FunctExpressionT<F>(_f); }
+  private:
+    F _f;
+  };
+
+ struct FunctExpression {
+   inline FunctExpression() { }
+   template<typename F>
+   inline FunctExpression(const F& f) : _f(new FunctExpressionT<F>(f)) { }
+   inline FunctExpression(const FunctExpression& e) : _f(e._f->clone()) { }
+   inline FunctExpression& operator=(const FunctExpression& e) { _f.reset(e._f->clone()); return *this; }
+   inline double operator()(double x) const { return (*_f)(x); }
+ private:
+   std::auto_ptr<AbsFunctExpression> _f;
+ };
+
 }
 
 #endif

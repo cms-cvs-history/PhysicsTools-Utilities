@@ -1,5 +1,5 @@
+#include "PhysicsTools/Utilities/interface/Likelihood.h"
 #include "PhysicsTools/Utilities/interface/BreitWigner.h"
-#include "PhysicsTools/Utilities/interface/HistoChiSquare.h"
 #include "PhysicsTools/Utilities/interface/RootMinuitCommands.h"
 #include "PhysicsTools/Utilities/interface/RootMinuit.h"
 #include "PhysicsTools/Utilities/interface/Parameter.h"
@@ -18,10 +18,12 @@
 
 int main() { 
   gROOT->SetStyle("Plain");
-  typedef funct::Product<funct::Parameter, funct::BreitWigner>::type FitFunction;
-  typedef fit::HistoChiSquare<FitFunction> ChiSquared;
+  typedef funct::BreitWigner PDF;
+  typedef std::vector<double> Sample;
+  typedef fit::Likelihood<Sample, PDF> Likelihood;
+  typedef funct::Product<funct::Parameter, PDF>::type PlotFunction;
   try {
-    fit::RootMinuitCommands<ChiSquared> commands("PhysicsTools/Utilities/test/testZMassFit.txt");
+    fit::RootMinuitCommands<Likelihood> commands("PhysicsTools/Utilities/test/testZMassFitLikelihood.txt");
     
     const char * kYield = "Yield";
     const char * kMass = "Mass";
@@ -32,10 +34,17 @@ int main() {
     funct::Parameter gamma(kGamma, commands.par(kGamma));
     funct::BreitWigner bw(mass, gamma);
     
-    FitFunction f = yield * bw;
+    PDF pdf = bw;
+    PlotFunction f = yield * pdf;
     TF1 startFun = root::tf1("startFun", f, 0, 200, yield, mass, gamma);
     TH1D histo("histo", "Z mass (GeV/c)", 200, 0, 200);
-    histo.FillRandom("startFun", yield);
+    Sample sample;
+    sample.reserve(yield);
+    for(unsigned int i = 0; i < yield; ++i) {
+      double m = startFun.GetRandom();
+      histo.Fill(m);
+      sample.push_back(m);
+    }
     TCanvas canvas;
     startFun.Draw();
     canvas.SaveAs("breitWigner.eps");
@@ -46,24 +55,21 @@ int main() {
     histo.Draw("e");
     startFun.Draw("same");
     
-    ChiSquared chi2(f, &histo, 80, 120);
-    int fullBins = chi2.numberOfBins();
-    std::cout << "N. deg. of freedom: " << fullBins << std::endl;
-    fit::RootMinuit<ChiSquared> minuit(chi2, true);
-    commands.add(minuit, yield);
+    Likelihood like(sample, pdf);
+    fit::RootMinuit<Likelihood> minuit(like, true);
     commands.add(minuit, mass);
     commands.add(minuit, gamma);
     commands.run(minuit);
-    ROOT::Math::SMatrix<double, 3, 3, ROOT::Math::MatRepSym<double, 3> > err;
+    ROOT::Math::SMatrix<double, 2, 2, ROOT::Math::MatRepSym<double, 2> > err;
     minuit.getErrorMatrix(err);
     std::cout << "error matrix:" << std::endl;
-    for(size_t i = 0; i < 3; ++i) {
-      for(size_t j = 0; j < 3; ++j) {
+    for(size_t i = 0; i < 2; ++i) {
+      for(size_t j = 0; j < 2; ++j) {
 	std::cout << err(i, j) << "\t";
       }
       std::cout << std::endl;
     } 
-    root::plot<FitFunction>("breitWignerHistoFunFit.eps", histo, f, 80, 120, yield, mass, gamma);
+    root::plot<PlotFunction>("breitWignerHistoFunFit.eps", histo, f, 80, 120, yield, mass, gamma);
   } catch(std::exception & err){
     std::cerr << "Exception caught:\n" << err.what() << std::endl;
     return 1;

@@ -1,5 +1,5 @@
+#include "PhysicsTools/Utilities/interface/Likelihood.h"
 #include "PhysicsTools/Utilities/interface/BreitWigner.h"
-#include "PhysicsTools/Utilities/interface/HistoChiSquare.h"
 #include "PhysicsTools/Utilities/interface/RootMinuitCommands.h"
 #include "PhysicsTools/Utilities/interface/RootMinuit.h"
 #include "PhysicsTools/Utilities/interface/Parameter.h"
@@ -18,10 +18,12 @@
 
 int main() { 
   gROOT->SetStyle("Plain");
-  typedef funct::Product<funct::Parameter, funct::BreitWigner>::type FitFunction;
-  typedef fit::HistoChiSquare<FitFunction> ChiSquared;
+  typedef funct::BreitWigner PDF;
+  typedef std::vector<double> Sample;
+  typedef funct::Product<funct::Parameter, PDF>::type FitFunction;
+  typedef fit::Likelihood<Sample, FitFunction, funct::Parameter> Likelihood;
   try {
-    fit::RootMinuitCommands<ChiSquared> commands("PhysicsTools/Utilities/test/testZMassFit.txt");
+    fit::RootMinuitCommands<Likelihood> commands("PhysicsTools/Utilities/test/testZMassFitLikelihood.txt");
     
     const char * kYield = "Yield";
     const char * kMass = "Mass";
@@ -32,10 +34,17 @@ int main() {
     funct::Parameter gamma(kGamma, commands.par(kGamma));
     funct::BreitWigner bw(mass, gamma);
     
-    FitFunction f = yield * bw;
+    PDF pdf = bw;
+    FitFunction f = yield * pdf;
     TF1 startFun = root::tf1("startFun", f, 0, 200, yield, mass, gamma);
     TH1D histo("histo", "Z mass (GeV/c)", 200, 0, 200);
-    histo.FillRandom("startFun", yield);
+    Sample sample;
+    sample.reserve(yield);
+    for(unsigned int i = 0; i < yield; ++i) {
+      double m = startFun.GetRandom();
+      histo.Fill(m);
+      sample.push_back(m);
+    }
     TCanvas canvas;
     startFun.Draw();
     canvas.SaveAs("breitWigner.eps");
@@ -46,10 +55,8 @@ int main() {
     histo.Draw("e");
     startFun.Draw("same");
     
-    ChiSquared chi2(f, &histo, 80, 120);
-    int fullBins = chi2.numberOfBins();
-    std::cout << "N. deg. of freedom: " << fullBins << std::endl;
-    fit::RootMinuit<ChiSquared> minuit(chi2, true);
+    Likelihood like(sample, f, yield);
+    fit::RootMinuit<Likelihood> minuit(like, true);
     commands.add(minuit, yield);
     commands.add(minuit, mass);
     commands.add(minuit, gamma);
