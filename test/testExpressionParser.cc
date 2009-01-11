@@ -28,7 +28,7 @@ public:
   void checkMuon(const std::string &, double);
   reco::Track trk;
   reco::CompositeCandidate cand;
-  ROOT::Reflex::Object o;
+  Reflex::Object o;
   reco::parser::ExpressionPtr expr;
   pat::Jet jet;
   pat::Muon muon;
@@ -87,7 +87,7 @@ void testExpressionParser::checkMuon(const std::string & expression, double x) {
 
 void testExpressionParser::checkAll() {
   using namespace reco;
-  using namespace ROOT::Reflex;
+  using namespace Reflex;
   const double chi2 = 20.0;
   const int ndof = 10;
   reco::Track::Point v(1, 2, 3);
@@ -117,8 +117,8 @@ void testExpressionParser::checkAll() {
   reco::TrackExtraRef trkExtraRef(h, 0);
   trk.setExtra(trkExtraRef);
   {
-    ROOT::Reflex::Type t = ROOT::Reflex::Type::ByTypeInfo(typeid(reco::Track));
-    o = ROOT::Reflex::Object(t, & trk);
+    Reflex::Type t = Reflex::Type::ByTypeInfo(typeid(reco::Track));
+    o = Reflex::Object(t, & trk);
     
     checkTrack("pt", trk.pt());
     checkTrack("charge", trk.charge());
@@ -141,8 +141,8 @@ void testExpressionParser::checkAll() {
   CPPUNIT_ASSERT(cand.daughter(0)!=0);
   CPPUNIT_ASSERT(cand.daughter(1)!=0);
   {
-    ROOT::Reflex::Type t = ROOT::Reflex::Type::ByTypeInfo(typeid(reco::Candidate));
-    o = ROOT::Reflex::Object(t, & cand);  
+    Reflex::Type t = Reflex::Type::ByTypeInfo(typeid(reco::Candidate));
+    o = Reflex::Object(t, & cand);  
     checkCandidate("numberOfDaughters", cand.numberOfDaughters());
     checkCandidate("daughter(0).isStandAloneMuon", cand.daughter(0)->isStandAloneMuon());  
     checkCandidate("daughter(1).isStandAloneMuon", cand.daughter(1)->isStandAloneMuon());  
@@ -164,8 +164,8 @@ void testExpressionParser::checkAll() {
   CPPUNIT_ASSERT(jet.nCarrying(1.0)  == 2);
   CPPUNIT_ASSERT(jet.nCarrying(0.1)  == 1);
   {
-    ROOT::Reflex::Type t = ROOT::Reflex::Type::ByTypeInfo(typeid(pat::Jet));
-    o = ROOT::Reflex::Object(t, & jet);
+    Reflex::Type t = Reflex::Type::ByTypeInfo(typeid(pat::Jet));
+    o = Reflex::Object(t, & jet);
     checkJet("nCarrying(1.0)", jet.nCarrying(1.0));
     checkJet("nCarrying(0.1)", jet.nCarrying(0.1));
   }
@@ -184,8 +184,8 @@ void testExpressionParser::checkAll() {
   CPPUNIT_ASSERT(jet.bDiscriminator("d ")  == 3.0);
   CPPUNIT_ASSERT(jet.getPairDiscri().size() == 3 );
   {
-    ROOT::Reflex::Type t = ROOT::Reflex::Type::ByTypeInfo(typeid(pat::Jet));
-    o = ROOT::Reflex::Object(t, & jet);
+    Reflex::Type t = Reflex::Type::ByTypeInfo(typeid(pat::Jet));
+    o = Reflex::Object(t, & jet);
     checkJet("bDiscriminator(\"aaa\")", jet.bDiscriminator("aaa"));
     checkJet("bDiscriminator('aaa')"  , jet.bDiscriminator("aaa"));
     checkJet("bDiscriminator(\"b c\")", jet.bDiscriminator("b c"));
@@ -193,7 +193,7 @@ void testExpressionParser::checkAll() {
   }
 
   {
-     ROOT::Reflex::Type t = ROOT::Reflex::Type::ByTypeInfo(typeid(pat::Jet));
+     Reflex::Type t = Reflex::Type::ByTypeInfo(typeid(pat::Jet));
      std::vector<reco::SecondaryVertexTagInfo::IndexedTrackData> trackData;
      std::vector<reco::SecondaryVertexTagInfo::VertexData> vertexData(1);
      
@@ -203,7 +203,7 @@ void testExpressionParser::checkAll() {
      dummyInfo.insert(edm::RefToBase<reco::Track>(), props);
      edm::Ptr<reco::BaseTagInfo> ptrDummyInfo(edm::ProductID(1),&dummyInfo,0);
      jet.addTagInfo("dummy", ptrDummyInfo);
-     o = ROOT::Reflex::Object(t, & jet);
+     o = Reflex::Object(t, & jet);
      checkJet("tagInfoSoftLepton.properties(0).quality",jet.tagInfoSoftLepton()->properties(0).quality);
   }
   muon = pat::Muon(reco::Muon(+1, p1+p2));
@@ -213,8 +213,8 @@ void testExpressionParser::checkAll() {
   CPPUNIT_ASSERT( muon.userIso(0) == 2.0 );
   CPPUNIT_ASSERT( muon.userIso(1) == 42.0 );
   {
-    ROOT::Reflex::Type t = ROOT::Reflex::Type::ByTypeInfo(typeid(pat::Muon));
-    o = ROOT::Reflex::Object(t, & muon);
+    Reflex::Type t = Reflex::Type::ByTypeInfo(typeid(pat::Muon));
+    o = Reflex::Object(t, & muon);
     checkMuon("userIso"    , muon.userIso() );
     checkMuon("userIso()"  , muon.userIso() );
     checkMuon("userIso(0)" , muon.userIso(0));

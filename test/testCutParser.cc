@@ -23,7 +23,7 @@ public:
   void checkMuon(const std::string &, bool, const reco::Muon &);
   reco::Track trk;
   SiStripRecHit2D hitOk, hitThrow;
-  ROOT::Reflex::Object o;
+  Reflex::Object o;
   reco::parser::SelectorPtr sel;
 };
 
@@ -39,8 +39,8 @@ void testCutParser::check(const std::string & cut, bool res) {
 }
 
 void testCutParser::checkHit(const std::string & cut, bool res, const SiStripRecHit2D &hit) {
-  ROOT::Reflex::Type t = ROOT::Reflex::Type::ByTypeInfo(typeid(SiStripRecHit2D));
-  o = ROOT::Reflex::Object(t, const_cast<void *>(static_cast<const void *>(&hit)));
+  Reflex::Type t = Reflex::Type::ByTypeInfo(typeid(SiStripRecHit2D));
+  o = Reflex::Object(t, const_cast<void *>(static_cast<const void *>(&hit)));
   std::cerr << "parsing cut: \"" << cut << "\"" << std::endl;
   sel.reset();
   CPPUNIT_ASSERT(reco::parser::cutParser<SiStripRecHit2D>(cut, sel));
@@ -50,8 +50,8 @@ void testCutParser::checkHit(const std::string & cut, bool res, const SiStripRec
 }
 
 void testCutParser::checkMuon(const std::string & cut, bool res, const reco::Muon &mu) {
-  ROOT::Reflex::Type t = ROOT::Reflex::Type::ByTypeInfo(typeid(reco::Muon));
-  o = ROOT::Reflex::Object(t, const_cast<void *>(static_cast<const void *>(&mu)));
+  Reflex::Type t = Reflex::Type::ByTypeInfo(typeid(reco::Muon));
+  o = Reflex::Object(t, const_cast<void *>(static_cast<const void *>(&mu)));
   std::cerr << "parsing cut: \"" << cut << "\"" << std::endl;
   sel.reset();
   CPPUNIT_ASSERT(reco::parser::cutParser<reco::Muon>(cut, sel));
@@ -64,7 +64,7 @@ void testCutParser::checkMuon(const std::string & cut, bool res, const reco::Muo
 
 void testCutParser::checkAll() {
   using namespace reco;
-  using namespace ROOT::Reflex;
+  using namespace Reflex;
   const double chi2 = 20.0;
   const int ndof = 10;
   reco::Track::Point v(1, 2, 3);
@@ -79,8 +79,8 @@ void testCutParser::checkAll() {
 
   hitOk = SiStripRecHit2D(LocalPoint(1,1), LocalError(1,1,1), 0, SiStripRecHit2D::ClusterRef());
 
-  ROOT::Reflex::Type t = ROOT::Reflex::Type::ByTypeInfo(typeid(reco::Track));
-  o = ROOT::Reflex::Object(t, & trk);
+  Reflex::Type t = Reflex::Type::ByTypeInfo(typeid(reco::Track));
+  o = Reflex::Object(t, & trk);
 
   std::cerr << "Track pt: " << trk.pt() << std::endl;
   // note: pt = 3, charge = -1
