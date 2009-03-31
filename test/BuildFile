@@ -30,7 +30,7 @@
 
 <bin file="testRooFitFunction.cpp" name="testRooFitFunction">
   <use name=PhysicsTools/Utilities>
-  <lib name=RooFit>
+  <use name=rootroofit>
 </bin>
 
 <bin file="testIntegralTiming.cpp" name="testIntegralTiming">
