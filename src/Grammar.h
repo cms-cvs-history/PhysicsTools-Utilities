@@ -7,11 +7,12 @@
  * \author original version: Chris Jones, Cornell, 
  *         extended by Luca Lista, INFN
  *
- * \version $Revision: 1.18 $
+ * \version $Revision: 1.19 $
  *
  */
 #include "boost/spirit/core.hpp"
 #include "boost/spirit/utility/grammar_def.hpp"
+#include "boost/spirit/utility/chset.hpp"
 #include <functional>
 #include "PhysicsTools/Utilities/src/ExpressionNumberSetter.h"
 #include "PhysicsTools/Utilities/src/ExpressionVarSetter.h"
@@ -154,9 +155,9 @@ namespace reco {
                     ( ch_p('"' ) >> *(~ch_p('"' ))  >> ch_p('"' ) ) [ methodArg_s ] |
                     ( ch_p('\'') >> *(~ch_p('\''))  >> ch_p('\'') ) [ methodArg_s ];
 	  var = 
-	    (alpha_p >> * alnum_p >> 
+	    (alpha_p >> * chset<>("a-zA-Z0-9_")  >> 
 	      ch_p('(') >> metharg >> * (ch_p(',') >> metharg ) >> expectParenthesis(ch_p(')'))) [ method_s ] |
-	    ( (alpha_p >> * alnum_p) [ method_s ] >> ! (ch_p('(') >> ch_p(')')) ) ;
+	    ( (alpha_p >> * chset<>("a-zA-Z0-9_")) [ method_s ] >> ! (ch_p('(') >> ch_p(')')) ) ;
 	  method = 
 	    (var >> * ((ch_p('.') >> expect(var)))) [ var_s ];
 	  function1 = 
