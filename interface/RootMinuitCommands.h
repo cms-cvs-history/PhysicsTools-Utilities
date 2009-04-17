@@ -148,7 +148,9 @@ namespace fit {
     bool commands = false;
     while(getline(*file, line)) {
       ++lineNumber_;
-      line.erase(line.end() - 1);
+      if(line.size()==0) continue;
+      char last = *line.rbegin();
+      if(!(last >= '0' && last <= 'z')) line.erase(line.end() - 1);
       boost::char_separator<char> sep(" ");
       tokenizer tokens(line, sep);
       tokenizer::iterator i = tokens.begin(), e = tokens.end();
