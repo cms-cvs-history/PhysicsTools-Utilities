@@ -173,6 +173,11 @@ void testCutParser::checkAll() {
   checkHit( "!hasPositionAndError || (localPosition.x = 1)", true,  hitOk    );
   checkHit( "!hasPositionAndError || (localPosition.x = 1)", true, hitThrow );
 
+  checkHit("cluster_regional.isNull()",true,hitOk);
+  checkHit("cluster.isNull()",true,hitOk);
+  checkHit("cluster_regional.isNonnull()",false,hitOk);
+  checkHit("cluster.isNonnull()",false,hitOk);
+
   reco::Muon emptyMu;
   CPPUNIT_ASSERT(  emptyMu.isGood(reco::Muon::All) );
   CPPUNIT_ASSERT( !emptyMu.isGood(reco::Muon::AllGlobalMuons) );

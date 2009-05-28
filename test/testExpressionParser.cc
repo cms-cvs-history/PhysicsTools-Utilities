@@ -212,6 +212,11 @@ void testExpressionParser::checkAll() {
   CPPUNIT_ASSERT( muon.userIso()  == 2.0 );
   CPPUNIT_ASSERT( muon.userIso(0) == 2.0 );
   CPPUNIT_ASSERT( muon.userIso(1) == 42.0 );
+  reco::IsoDeposit dep; dep.addCandEnergy(2.0);
+  CPPUNIT_ASSERT(dep.candEnergy() == 2.0);
+  muon.setIsoDeposit(pat::TrackerIso, dep);
+  CPPUNIT_ASSERT(muon.trackerIsoDeposit() != 0);
+  CPPUNIT_ASSERT(muon.trackerIsoDeposit()->candEnergy() == 2.0);
   {
     ROOT::Reflex::Type t = ROOT::Reflex::Type::ByTypeInfo(typeid(pat::Muon));
     o = ROOT::Reflex::Object(t, & muon);
@@ -219,5 +224,6 @@ void testExpressionParser::checkAll() {
     checkMuon("userIso()"  , muon.userIso() );
     checkMuon("userIso(0)" , muon.userIso(0));
     checkMuon("userIso(1)" , muon.userIso(1));
+    checkMuon("trackerIsoDeposit.candEnergy", muon.trackerIsoDeposit()->candEnergy());
   }
 }

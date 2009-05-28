@@ -21,7 +21,6 @@ CPPUNIT_TEST_SUITE_REGISTRATION(testVariables);
 void testVariables::checkAll() {
   double value = 1.234, value1 = 2.345;
   funct::X x;
-  CPPUNIT_ASSERT(x.name() == "x");
   x = value;
   double v = x;
   CPPUNIT_ASSERT(v == value);
