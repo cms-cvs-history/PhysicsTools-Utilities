@@ -9,23 +9,36 @@
 </bin>
 
 <bin file="testZMassFit.cpp" name="testZMassFit">
+  <use name=rootminuit>
+  <use name=rootminuit2>
   <use name=PhysicsTools/Utilities>
+  <use name=Utilities/General>
 </bin>
 
 <bin file="testZMassFitSimple.cpp" name="testZMassFitSimple">
+  <use name=rootminuit>
   <use name=PhysicsTools/Utilities>
 </bin>
 
 <bin file="testZMassFitLikelihood.cpp" name="testZMassFitLikelihood">
+  <use name=rootminuit>
+  <use name=rootminuit2>
   <use name=PhysicsTools/Utilities>
+  <use name=Utilities/General>
 </bin>
 
 <bin file="testZMassFitExtLikelihood.cpp" name="testZMassFitExtLikelihood">
+  <use name=rootminuit> 
+  <use name=rootminuit2>
   <use name=PhysicsTools/Utilities>
+  <use name=Utilities/General>
 </bin>
 
 <bin file="testExpressionFit.cpp" name="testExpressionFit">
+  <use name=rootminuit>
+  <use name=rootminuit2>
   <use name=PhysicsTools/Utilities>
+  <use name=Utilities/General>
 </bin>
 
 <bin file="testRooFitFunction.cpp" name="testRooFitFunction">
@@ -34,6 +47,8 @@
 </bin>
 
 <bin file="testIntegralTiming.cpp" name="testIntegralTiming">
+  <use name=rootminuit>
+  <use name=Utilities/General>
   <use name=PhysicsTools/Utilities>
 </bin>
 
