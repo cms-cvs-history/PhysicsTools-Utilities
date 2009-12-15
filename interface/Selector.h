@@ -10,7 +10,7 @@
   The user can then turn individual cuts on and off at will. 
 
   \author Salvatore Rappoccio
-  \version  $Id: Selector.h,v 1.3 2009/09/22 16:01:48 srappocc Exp $
+  \version  $Id: Selector.h,v 1.5 2009/10/12 00:50:49 srappocc Exp $
 */
 
 
@@ -91,9 +91,21 @@ class Selector : public std::binary_function<T, std::strbitset, bool>  {
     bits_[s] = false;
   }
 
-  /// Access the selector cut at index "s"
+  /// Access the selector cut at index "s".
+  /// "true" means to consider the cut.
+  /// "false" means to ignore the cut.
   bool operator[] ( std::string s ) const {
     return bits_[s];
+  }
+
+  /// consider the cut at index "s"
+  bool considerCut( std::string s ) const {
+    return bits_[s] == true;
+  }
+
+  /// ignore the cut at index "s"
+  bool ignoreCut( std::string s ) const {
+    return bits_[s] == false;
   }
 
   /// Passing cuts
@@ -120,7 +132,16 @@ class Selector : public std::binary_function<T, std::strbitset, bool>  {
   };
 
   /// Get an empty bitset with the proper names
-  std::strbitset getBitTemplate() const { return bits_;}
+  std::strbitset getBitTemplate() const { 
+    std::strbitset ret = bits_; 
+    ret.set(false);
+    for ( cut_flow_map::const_iterator cutsBegin = cutFlow_.begin(),
+	    cutsEnd = cutFlow_.end(), icut = cutsBegin;
+	  icut != cutsEnd; ++icut ) {
+      if ( ignoreCut(icut->first) ) ret[icut->first] = true;
+    }     
+    return ret;
+  }
 
   /// Print the cut flow
   void print(std::ostream & out) const { 
@@ -128,10 +149,17 @@ class Selector : public std::binary_function<T, std::strbitset, bool>  {
 	    cutsEnd = cutFlow_.end(), icut = cutsBegin;
 	  icut != cutsEnd; ++icut ) {
       char buff[1000];
-      sprintf(buff, "%6d : %20s %10d", 
-	      icut - cutsBegin,
-	      icut->first.c_str(),
-	      icut->second );
+      if ( considerCut( icut->first ) ) {
+	sprintf(buff, "%6d : %20s %10d", 
+		icut - cutsBegin,
+		icut->first.c_str(),
+		icut->second );
+      } else {
+	sprintf(buff, "%6d : %20s %10s", 
+		icut - cutsBegin,
+		icut->first.c_str(),
+		"off" );
+      }
       out << buff << std::endl;
     } 
   }
