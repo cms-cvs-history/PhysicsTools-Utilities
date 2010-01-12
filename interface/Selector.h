@@ -10,7 +10,7 @@
   The user can then turn individual cuts on and off at will. 
 
   \author Salvatore Rappoccio
-  \version  $Id: Selector.h,v 1.5 2009/10/12 00:50:49 srappocc Exp $
+  \version  $Id: Selector.h,v 1.6 2009/11/05 19:58:14 srappocc Exp $
 */
 
 
@@ -141,6 +141,15 @@ class Selector : public std::binary_function<T, std::strbitset, bool>  {
       if ( ignoreCut(icut->first) ) ret[icut->first] = true;
     }     
     return ret;
+  }
+
+  /// set ignored bits
+  void setIgnored( std::strbitset & ret ) {
+    for ( cut_flow_map::const_iterator cutsBegin = cutFlow_.begin(),
+	    cutsEnd = cutFlow_.end(), icut = cutsBegin;
+	  icut != cutsEnd; ++icut ) {
+      if ( ignoreCut(icut->first) ) ret[icut->first] = true;
+    } 
   }
 
   /// Print the cut flow
