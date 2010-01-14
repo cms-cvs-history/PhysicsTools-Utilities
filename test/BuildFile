@@ -52,3 +52,10 @@
   <use name=PhysicsTools/Utilities>
 </bin>
 
+<bin file="testSideBandSubtraction.cc" name="testSideBandSubtraction">
+  <use name=root>
+  <use name=rootcore>
+  <use name=roofit>
+  <use name=PhysicsTools/Utilities>
+  <use lib=Gpad>
+</bin>
