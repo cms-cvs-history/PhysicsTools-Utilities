@@ -21,6 +21,8 @@
 #include <string>
 #include <boost/shared_ptr.hpp>
 #include <vector>
+#include "FWCore/Framework/interface/Event.h"
+#include "FWCore/Framework/interface/EventPrincipal.h"
 
 namespace reweight{
 
@@ -221,7 +223,7 @@ namespace reweight{
 
 
 namespace edm {
-  class EventBase;
+
   class LumiReWeighting {
   public:
     LumiReWeighting( std::string generatedFile,
@@ -237,11 +239,11 @@ namespace edm {
 
     double weight3BX( float npv ) ;
 
-    double weight( const edm::EventBase &e ) ;
+    double weight( const edm::Event &e ) ;
 
-    double weight3BX( const edm::EventBase &e ) ;
+    double weight3BX( const edm::Event &e ) ;
 
-    double weightOOT( const edm::EventBase &e ) ;
+    double weightOOT( const edm::Event &e ) ;
 
     void weightOOT_init(); 
 
